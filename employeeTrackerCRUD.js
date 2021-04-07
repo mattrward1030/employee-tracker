@@ -48,9 +48,9 @@ const start = () => {
                 //     addEmployee();
                 //     break;
 
-                // case "Remove Employee":
-                //     removeEmployee();
-                //     break;
+                case "Remove Employee":
+                    removeEmployee();
+                    break;
 
                 // case "Update Employee Role":
                 //     updateEmployeeRole();
@@ -60,9 +60,9 @@ const start = () => {
                 //     updateEmployeeManager();
                 //     break;
 
-                // case "EXIT":
-                //     connection.end();
-                //     break;
+                case "EXIT":
+                    connection.end();
+                    break;
             }
         });
 }
@@ -73,11 +73,59 @@ const viewEmployees = () => {
         if (err) throw err;
         // Log all results of the SELECT statement
         console.table(res);
-        connection.end();
+        start();
     });
 }
 
 
+
+
+
+
+const removeEmployee = () => {
+    connection.query('SELECT * FROM employee', (err, results) => {
+        if (err) throw err;
+
+        inquirer
+            .prompt([
+                {
+                    name: 'employee',
+                    type: 'rawlist',
+                    choices() {
+                        const employeeArray = [];
+                        results.forEach(({ first_name, last_name }) => {
+                            employeeArray.push(`${first_name} ${last_name}`)
+                        });
+                        return employeeArray;
+                    },
+                    message: 'Which employee do you wish to remove?',
+                }
+
+            ])
+
+            .then((answer) => {
+                // get the information of the chosen item
+                let chosenEmployee;
+                results.forEach((employee) => {
+                    if (employee.first_name && employee.last_name === answer.choice) {
+                        chosenEmployee = employee
+                        connection.query(
+                            'Delete FROM employee WHERE ?',
+                            {
+                                answer: chosenEmployee
+                            },
+
+                            (error) => {
+                                if (error) throw err;
+                                console.log('Employee removed');
+                                start();
+                            }
+                        );
+                    }
+                });
+            });
+    });
+}
 // Connect to the DB
 connection.connect((err) => {
     if (err) throw err;
