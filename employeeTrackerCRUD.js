@@ -1,4 +1,7 @@
 const mysql = require('mysql');
+const inquirer = require('inquirer');
+let table = require('console.table')
+
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -33,35 +36,45 @@ const start = () => {
                     viewEmployees();
                     break;
 
-                case "View All Employees By Department":
-                    viewEmployeesDepartment();
-                    break;
+                // case "View All Employees By Department":
+                //     viewEmployeesDepartment();
+                //     break;
 
-                case "View All Employees By Manager":
-                    viewEmployeesManager();
-                    break;
+                // case "View All Employees By Manager":
+                //     viewEmployeesManager();
+                //     break;
 
-                case "Add Employee":
-                    addEmployee();
-                    break;
+                // case "Add Employee":
+                //     addEmployee();
+                //     break;
 
-                case "Remove Employee":
-                    removeEmployee();
-                    break;
+                // case "Remove Employee":
+                //     removeEmployee();
+                //     break;
 
-                case "Update Employee Role":
-                    updateEmployeeRole();
-                    break;
+                // case "Update Employee Role":
+                //     updateEmployeeRole();
+                //     break;
 
-                case "Update Employee Manager":
-                    updateEmployeeManager();
-                    break;
+                // case "Update Employee Manager":
+                //     updateEmployeeManager();
+                //     break;
 
-                case "EXIT":
-                    connection.end();
-                    break;
+                // case "EXIT":
+                //     connection.end();
+                //     break;
             }
         });
+}
+
+const viewEmployees = () => {
+    console.log('Selecting all employees...\n');
+    connection.query('SELECT * FROM employee', (err, res) => {
+        if (err) throw err;
+        // Log all results of the SELECT statement
+        console.table(res);
+        connection.end();
+    });
 }
 
 
