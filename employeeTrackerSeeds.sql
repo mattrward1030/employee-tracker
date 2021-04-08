@@ -61,17 +61,23 @@ VALUES("Vanessa", "Williams", 8, 4);
 INSERT INTO role (title, salary, department_id)
 VALUES("Sales Lead", 100000, 1);
 INSERT INTO role (title, salary, department_id)
-VALUES("Salesperson", 80000, 2);
+VALUES("Salesperson", 80000, 1);
 INSERT INTO role (title, salary, department_id)
-VALUES("Lead Engineer", 200000, 3);
+VALUES("Lead Engineer", 200000, 2);
 INSERT INTO role (title, salary, department_id)
-VALUES("Software Engineer", 155000, 4);
+VALUES("Software Engineer", 155000, 2);
 INSERT INTO role (title, salary, department_id)
-VALUES("Account Manager", 110000, 5);
+VALUES("Account Manager", 110000, 3);
 INSERT INTO role (title, salary, department_id)
-VALUES("Accountant", 70000, 6);
+VALUES("Accountant", 70000, 3);
 INSERT INTO role (title, salary, department_id)
-VALUES("Legal Team Lead", 175000, 7);
+VALUES("Legal Team Lead", 175000, 4);
+
+
+-- DELETE FROM role WHERE `id` = '14'
+
+-- UPDATE role SET department_id = "4" WHERE id = 7
+
 
 INSERT INTO department (name)
 VALUES("Sales");
@@ -104,4 +110,3 @@ VALUES("Jeff Bezos");
 
 -- SELECT employee.first_name, employee.last_name, department.name FROM employee JOIN role ON employee.role_id = role.id JOIN department ON department.id = role.department_id;
 SELECT * FROM employee JOIN role ON employee.role_id = role.id JOIN department ON department.id = role.department_id WHERE ?
-
