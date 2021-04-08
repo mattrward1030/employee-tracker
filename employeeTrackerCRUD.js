@@ -25,7 +25,7 @@ const start = () => {
             {
                 type: "list",
                 message: "What would you like to do?",
-                choices: ["View All Employees", "View All Employees By Department", "View All Employees By Manager", "Add Employee", "Remove Employee", "Update Employee Role", "Update Employee Manager", "EXIT"],
+                choices: ["View All Employees", "View All Employees By Department", "View All Employees By Role", "View All Employees By Manager", "Add Employee", "Remove Employee", "Update Employee Role", "Update Employee Manager", "EXIT"],
                 name: "userSelection"
 
             }
@@ -38,6 +38,10 @@ const start = () => {
 
                 case "View All Employees By Department":
                     viewEmployeesDepartment();
+                    break;
+
+                case "View All Employees By Role":
+                    viewEmployeesByRole();
                     break;
 
                 // case "View All Employees By Manager":
@@ -130,7 +134,7 @@ const addEmployee = () => {
         });
 };
 
-const viewEmployeesDepartment = () => {
+const viewEmployeesByRole = () => {
     inquirer.prompt([
         {
             name: "title",
