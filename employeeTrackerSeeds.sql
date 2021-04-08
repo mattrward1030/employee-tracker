@@ -22,10 +22,16 @@ CREATE TABLE employee(
 id INT NOT NULL AUTO_INCREMENT,
 first_name VARCHAR(30) NOT NULL,
 last_name VARCHAR(30) NOT NULL,
-role_id INT NOT NULL,
+role_id INT NULL,
 manager_id INT NULL,
 PRIMARY KEY(id)
 );
+
+
+
+
+
+
 
 
 CREATE TABLE manager(
@@ -49,8 +55,7 @@ INSERT INTO employee(first_name, last_name, role_id, manager_id)
 VALUES("Molly", "Armstrong", 6, 3);
 INSERT INTO employee(first_name, last_name, role_id, manager_id)
 VALUES("Julia", "Rhymes", 7, 4);
-INSERT INTO employee(first_name, last_name, role_id, manager_id)
-VALUES("Vanessa", "Williams", 8, 4);
+
 
 INSERT INTO role (title, salary, department_id)
 VALUES("Sales Lead", 100000, 1);
