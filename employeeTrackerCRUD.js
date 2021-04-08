@@ -83,56 +83,72 @@ const viewEmployees = () => {
 
 
 const addEmployee = () => {
-
-    inquirer
-        .prompt([
-            {
-                name: "firstName",
-                type: "input",
-                message: "What is the employee's first name",
-            },
-            {
-                name: "lastName",
-                type: "input",
-                message: "What is the employee's last name?",
-            },
-            {
-                name: "role",
-                type: "list",
-                message: "What is the employee's role",
-                choices: ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead"],
-
-            },
-
-            {
-                name: "manager",
-                type: "list",
-                message: "Who is the employee's manager?",
-                choices: ["John Smith", "John Snow", "Steve Jobs", "Jeff Bezos", "None"]
-
-            },
-
-
-        ])
-        .then((answer) => {
-            // when finished prompting, insert a new item into the db with that info
-            connection.query(
-                'INSERT INTO employee SET ?',
+    connection.query('SELECT * FROM role', (err, results) => {
+        console.log(results);
+        inquirer
+            .prompt([
                 {
-                    first_name: answer.firstName,
-                    last_name: answer.lastName,
-                    role_id: answer.role,
-                    manager_id: answer.manager,
+                    name: "firstName",
+                    type: "input",
+                    message: "What is the employee's first name",
                 },
-                (err) => {
-                    if (err) throw err;
-                    console.log('Employee added!');
-                    // re-prompt the user for if they want to make other selections
-                    start();
-                }
-            );
-        });
+                {
+                    name: "lastName",
+                    type: "input",
+                    message: "What is the employee's last name?",
+                },
+                {
+                    name: "role",
+                    type: "rawlist",
+                    message: "What is the employee's role",
+                    choices() {
+                        const roleArray = [];
+                        results.forEach(({ title }) => {
+                            roleArray.push(title)
+                        })
+                        return roleArray;
+                    }
+                },
+
+                // {
+                //     name: "manager",
+                //     type: "list",
+                //     message: "Who is the employee's manager?",
+                //     choices: ["Steve Jobs", "Tim Cook", "Elon Musk", "Jeff Bezos"]
+
+                // },
+
+
+            ])
+            .then((answer) => {
+                console.log(answer);
+                // when finished prompting, insert a new item into the db with that info
+                let chosenRole;
+                results.forEach((role) => {
+                    if (answer.role === role.title) {
+                        chosenRole = role.id;
+                        return chosenRole;
+                    }
+                });
+                connection.query(
+                    'INSERT INTO employee SET ?',
+                    {
+                        first_name: answer.firstName,
+                        last_name: answer.lastName,
+                        role_id: chosenRole,
+                        // manager_id: chosenManager,
+                    },
+                    (err) => {
+                        if (err) throw err;
+                        console.log('Employee added!');
+                        // re-prompt the user for if they want to make other selections
+                        start();
+                    }
+                );
+            });
+    });
 };
+
 
 const viewEmployeesByRole = () => {
     inquirer.prompt([
