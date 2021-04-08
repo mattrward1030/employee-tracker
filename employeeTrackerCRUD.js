@@ -44,9 +44,9 @@ const start = () => {
                     viewEmployeesByRole();
                     break;
 
-                // case "View Employees By Manager":
-                //     viewEmployeesManager();
-                //     break;
+                case "View Employees By Manager":
+                    viewEmployeesManager();
+                    break;
 
                 case "Add Employee":
                     addEmployee();
@@ -139,7 +139,7 @@ const viewEmployeesByRole = () => {
         {
             name: "title",
             type: "list",
-            message: "View All Employees By Role",
+            message: "View Employees By Role",
             choices: ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead"],
         }
     ])
@@ -150,13 +150,12 @@ const viewEmployeesByRole = () => {
                 {
                     title: `${answer.title}`,
                 },
-                (err, rows) => {
+                (err, results) => {
                     if (err) throw err;
                     console.log(
-                        `${answer.title}s`)
-                    rows.forEach((row) => {
-                        console.log(`${row.last_name}, ${row.first_name}
-                        `);
+                        `${answer.title}:`)
+                    results.forEach((results) => {
+                        console.log(`${results.first_name} ${results.last_name}`);
                     });
                     start();
                 })
@@ -166,26 +165,54 @@ const viewEmployeesByRole = () => {
 const viewEmployeesDepartment = () => {
     inquirer.prompt([
         {
-            name: "title",
+            name: "department",
             type: "list",
-            message: "View All Employees By Department",
+            message: "View Employees By Department",
             choices: ["Sales", "Engineering", "Finance", "Legal"],
         }
     ])
         .then((answer) => {
 
             connection.query(
-                'SELECT employee.first_name, employee.last_name FROM employee JOIN role ON employee.role_id=department.id WHERE ?',
+                'SELECT * FROM employee JOIN role ON employee.role_id = role.id JOIN department ON department.id = role.department_id WHERE ?',
                 {
-                    id: `${answer.title}`,
+                    name: `${answer.department}`,
                 },
-                (err, rows) => {
+                (err, results) => {
                     if (err) throw err;
                     console.log(
-                        `${answer.title}s`)
-                    rows.forEach((row) => {
-                        console.log(`${row.last_name}, ${row.first_name}
-                        `);
+                        `${answer.department}:`)
+                    results.forEach((results) => {
+                        console.log(`${results.first_name} ${results.last_name}`);
+                    });
+                    start();
+                })
+        })
+};
+
+const viewEmployeesManager = () => {
+    inquirer.prompt([
+        {
+            name: "manager",
+            type: "list",
+            message: "View Employees By Manager",
+            choices: ["Steve Jobs", "Tim Cook", "Elon Musk", "Jeff Bezos"],
+        }
+    ])
+        .then((answer) => {
+
+            connection.query(
+                'SELECT employee.first_name, employee.last_name FROM employee JOIN manager ON employee.role_id = manager.id JOIN manager ON manager.id = role.manager WHERE ?',
+                {
+                    name: `${answer.manager}`
+
+                },
+                (err, results) => {
+                    if (err) throw err;
+                    console.log(
+                        `${answer.department}:`)
+                    results.forEach((results) => {
+                        console.log(`${results.first_name} ${results.last_name}`);
                     });
                     start();
                 })
@@ -244,3 +271,4 @@ connection.connect((err) => {
     console.log(`connected as id ${connection.threadId}\n`);
     start();
 });
+
