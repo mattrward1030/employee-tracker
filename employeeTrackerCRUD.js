@@ -139,7 +139,7 @@ const viewEmployeesByRole = () => {
         {
             name: "title",
             type: "list",
-            message: "View All Employees By Department",
+            message: "View All Employees By Role",
             choices: ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead"],
         }
     ])
@@ -162,6 +162,37 @@ const viewEmployeesByRole = () => {
                 })
         })
 };
+
+const viewEmployeesDepartment = () => {
+    inquirer.prompt([
+        {
+            name: "title",
+            type: "list",
+            message: "View All Employees By Department",
+            choices: ["Sales", "Engineering", "Finance", "Legal"],
+        }
+    ])
+        .then((answer) => {
+
+            connection.query(
+                'SELECT employee.first_name, employee.last_name FROM employee JOIN role ON employee.role_id=department.id WHERE ?',
+                {
+                    id: `${answer.title}`,
+                },
+                (err, rows) => {
+                    if (err) throw err;
+                    console.log(
+                        `${answer.title}s`)
+                    rows.forEach((row) => {
+                        console.log(`${row.last_name}, ${row.first_name}
+                        `);
+                    });
+                    start();
+                })
+        })
+};
+
+
 
 // const removeEmployee = () => {
 //     connection.query('SELECT * FROM employee', (err, results) => {
