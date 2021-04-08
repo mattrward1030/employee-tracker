@@ -25,7 +25,7 @@ const start = () => {
             {
                 type: "list",
                 message: "What would you like to do?",
-                choices: ["View All Employees", "View Employees By Department", "View Employees By Role", "View Employees By Manager", "Add Employee", "Add Department", "Remove Employee", "Update Employee Role", "Update Employee Manager", "EXIT"],
+                choices: ["View All Employees", "View Employees By Department", "View Employees By Role", "View Employees By Manager", "Add Employee", "Add Department", "Add Role", "Remove Employee", "Update Employee Role", "Update Employee Manager", "EXIT"],
                 name: "userSelection"
 
             }
@@ -54,6 +54,10 @@ const start = () => {
 
                 case "Add Department":
                     addDepartment();
+                    break;
+
+                case "Add Role":
+                    addRole();
                     break;
 
                 // case "Remove Employee":
@@ -113,116 +117,6 @@ const viewEmployeesByRole = () => {
         })
 };
 
-const addEmployee = () => {
-    connection.query('SELECT * FROM role', (err, roles) => {
-        connection.query('SELECT * FROM manager', (err, managers) => {
-            // console.log(results);
-            inquirer
-                .prompt([
-                    {
-                        name: "firstName",
-                        type: "input",
-                        message: "What is the employee's first name",
-                    },
-                    {
-                        name: "lastName",
-                        type: "input",
-                        message: "What is the employee's last name?",
-                    },
-                    {
-                        name: "role",
-                        type: "rawlist",
-                        message: "What is the employee's role",
-                        choices() {
-                            const roleArray = [];
-                            roles.forEach(({ title }) => {
-                                roleArray.push(title)
-                            })
-                            return roleArray;
-                        }
-                    },
-
-                    {
-                        name: "manager",
-                        type: "rawlist",
-                        message: "Who is the employee's manager",
-                        choices() {
-                            const managerArray = [];
-                            managers.forEach(({ name }) => {
-                                managerArray.push(name)
-                            })
-                            return managerArray;
-                        }
-
-                    },
-
-
-                ])
-                .then((answer) => {
-                    console.log(answer);
-                    // when finished prompting, insert a new item into the db with that info
-                    let chosenManager;
-                    answer.forEach((manager) => {
-                        if (answer.manager === manager.name) {
-                            chosenManager = manager.id;
-                            return chosenManager;
-                        }
-                    })
-                        .then((answer) => {
-                            let chosenRole;
-                            answer.forEach((role) => {
-                                if (answer.role === role.title) {
-                                    chosenRole = role.id;
-                                    return chosenRole;
-                                }
-                            });
-                        })
-                    connection.query(
-                        'INSERT INTO employee SET ?',
-                        {
-                            first_name: answer.firstName,
-                            last_name: answer.lastName,
-                            role_id: chosenRole,
-                            manager_id: chosenManager,
-                        },
-                        (err) => {
-                            if (err) throw err;
-                            console.log('Employee added!');
-                            // re-prompt the user for if they want to make other selections
-                            start();
-                        }
-                    );
-                });
-        });
-    });
-};
-
-const addDepartment = () => {
-
-    inquirer.prompt([
-        {
-            name: "newDep",
-            type: "input",
-            message: "Add New Department",
-        }
-
-    ])
-        .then((answer) => {
-
-            connection.query(
-                'INSERT INTO department SET ?',
-                {
-                    name: answer.newDep
-                },
-                (err, results) => {
-                    if (err) throw err;
-                    console.log("Department added!")
-                    start();
-                })
-        })
-};
-
-
 const viewEmployeesDepartment = () => {
     inquirer.prompt([
         {
@@ -279,6 +173,143 @@ const viewEmployeesManager = () => {
                 })
         })
 };
+
+
+const addEmployee = () => {
+    connection.query('SELECT * FROM role', (err, roles) => {
+        connection.query('SELECT * FROM manager', (err, managers) => {
+            // console.log(results);
+            inquirer
+                .prompt([
+                    {
+                        name: "firstName",
+                        type: "input",
+                        message: "What is the employee's first name",
+                    },
+                    {
+                        name: "lastName",
+                        type: "input",
+                        message: "What is the employee's last name?",
+                    },
+                    {
+                        name: "role",
+                        type: "rawlist",
+                        message: "What is the employee's role",
+                        choices() {
+                            const roleArray = [];
+                            roles.forEach(({ title }) => {
+                                roleArray.push(title)
+                            })
+                            return roleArray;
+                        }
+                    },
+
+                    {
+                        name: "manager",
+                        type: "rawlist",
+                        message: "Who is the employee's manager",
+                        choices() {
+                            const managerArray = [];
+                            managers.forEach(({ name }) => {
+                                managerArray.push(name)
+                            })
+                            return managerArray;
+                        }
+
+                    },
+
+
+                ])
+                .then((answer) => {
+                    console.log(answer);
+                    // when finished prompting, insert a new item into the db with that info
+                    let chosenManager;
+                    managers.forEach((manager) => {
+                        if (answer.manager === manager.name) {
+                            chosenManager = manager.id;
+                            return chosenManager;
+                        }
+                    })
+
+                    let chosenRole;
+                    roles.forEach((role) => {
+                        if (answer.role === role.title) {
+                            chosenRole = role.id;
+                            return chosenRole;
+                        }
+                    });
+
+                    connection.query(
+                        'INSERT INTO employee SET ?',
+                        {
+                            first_name: answer.firstName,
+                            last_name: answer.lastName,
+                            role_id: chosenRole,
+                            manager_id: chosenManager,
+                        },
+                        (err) => {
+                            if (err) throw err;
+                            console.log('Employee added!');
+                            // re-prompt the user for if they want to make other selections
+                            start();
+                        }
+                    );
+                });
+        });
+    });
+};
+
+const addDepartment = () => {
+
+    inquirer.prompt([
+        {
+            name: "newDep",
+            type: "input",
+            message: "Add New Department",
+        }
+
+    ])
+        .then((answer) => {
+
+            connection.query(
+                'INSERT INTO department SET ?',
+                {
+                    name: answer.newDep
+                },
+                (err, results) => {
+                    if (err) throw err;
+                    console.log("Department added!")
+                    start();
+                })
+        })
+};
+
+const addRole = () => {
+
+    inquirer.prompt([
+        {
+            name: "newRole",
+            type: "input",
+            message: "Add New Role:",
+        }
+
+    ])
+        .then((answer) => {
+
+            connection.query(
+                'INSERT INTO role SET ?',
+                {
+                    title: answer.newRole
+                },
+                (err, results) => {
+                    if (err) throw err;
+                    console.log("Role added!")
+                    start();
+                })
+        })
+};
+
+
 
 
 
