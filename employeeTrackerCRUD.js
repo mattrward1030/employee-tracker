@@ -202,7 +202,7 @@ const viewEmployeesManager = () => {
         .then((answer) => {
 
             connection.query(
-                'SELECT employee.first_name, employee.last_name FROM employee JOIN manager ON employee.role_id = manager.id JOIN manager ON manager.id = role.manager WHERE ?',
+                'SELECT * FROM employee JOIN manager ON employee.manager_id = manager.id WHERE ?',
                 {
                     name: `${answer.manager}`
 
@@ -210,7 +210,7 @@ const viewEmployeesManager = () => {
                 (err, results) => {
                     if (err) throw err;
                     console.log(
-                        `${answer.department}:`)
+                        `${answer.manager}:`)
                     results.forEach((results) => {
                         console.log(`${results.first_name} ${results.last_name}`);
                     });

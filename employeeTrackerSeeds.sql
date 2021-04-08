@@ -27,12 +27,6 @@ manager_id INT NULL,
 PRIMARY KEY(id)
 );
 
-CREATE TABLE managers(
-id INT NOT NULL AUTO_INCREMENT,
-first_name VARCHAR(30) NOT NULL,
-last_name VARCHAR(30) NOT NULL,
-PRIMARY KEY(id)
-);
 
 CREATE TABLE manager(
 id INT NOT NULL AUTO_INCREMENT,
@@ -89,15 +83,6 @@ INSERT INTO department (name)
 VALUES("Legal");
 
 
-INSERT INTO managers (first_name, last_name)
-VALUES("Steve", "Jobs");
-INSERT INTO managers (first_name, last_name)
-VALUES("Tim", "Cook");
-INSERT INTO managers (first_name, last_name)
-VALUES("Elon", "Musk");
-INSERT INTO managers (first_name, last_name)
-VALUES("Jeff", "Bezos");
-
 INSERT INTO manager(name)
 VALUES("Steve Jobs");
 INSERT INTO manager(name)
@@ -110,3 +95,5 @@ VALUES("Jeff Bezos");
 
 -- SELECT employee.first_name, employee.last_name, department.name FROM employee JOIN role ON employee.role_id = role.id JOIN department ON department.id = role.department_id;
 SELECT * FROM employee JOIN role ON employee.role_id = role.id JOIN department ON department.id = role.department_id WHERE ?
+
+
