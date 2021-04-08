@@ -48,54 +48,54 @@
 
 
 
-// const addRole = () => {
-//     connection.query('SELECT * FROM role', (err, results) => {
-//         console.log(results);
-//         inquirer
-//             .prompt([
+const addRole = () => {
+    connection.query('SELECT * FROM role', (err, results) => {
+        console.log(results);
+        inquirer
+            .prompt([
 
-//                 {
-//                     name: "role",
-//                     type: "rawlist",
-//                     message: "What is the employee's role",
-//                     choices() {
-//                         const roleArray = [];
-//                         results.forEach(({ title }) => {
-//                             roleArray.push(title)
-//                         })
-//                         return roleArray;
-//                     }
-//                 },
+                {
+                    name: "role",
+                    type: "rawlist",
+                    message: "What is the employee's role",
+                    choices() {
+                        const roleArray = [];
+                        results.forEach(({ title }) => {
+                            roleArray.push(title)
+                        })
+                        return roleArray;
+                    }
+                },
 
 
-//             ])
-//             .then((answer) => {
-//                 console.log(answer);
-//                 // when finished prompting, insert a new item into the db with that info
-//                 let chosenRole;
-//                 results.forEach((role) => {
-//                     if (answer.role === role.title) {
-//                         chosenRole = role.id;
-//                         return chosenRole;
-//                     }
-//                 });
-//                 connection.query(
-//                     'INSERT INTO employee SET ?',
-//                     {
+            ])
+            .then((answer) => {
+                console.log(answer);
+                // when finished prompting, insert a new item into the db with that info
+                let chosenRole;
+                results.forEach((role) => {
+                    if (answer.role === role.title) {
+                        chosenRole = role.id;
+                        return chosenRole;
+                    }
+                });
+                connection.query(
+                    'INSERT INTO employee SET ?',
+                    {
 
-//                         role_id: chosenRole,
+                        role_id: chosenRole,
 
-//                     },
-//                     (err) => {
-//                         if (err) throw err;
-//                         console.log('Employee added!');
-//                         // re-prompt the user for if they want to make other selections
+                    },
+                    (err) => {
+                        if (err) throw err;
+                        console.log('Employee added!');
+                        // re-prompt the user for if they want to make other selections
 
-//                     }
-//                 );
-//             });
-//     });
-// };
+                    }
+                );
+            });
+    });
+};
 
 const addEmployee = () => {
     connection.query('SELECT * FROM role', (err, results) => {
